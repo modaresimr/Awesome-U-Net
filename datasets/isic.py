@@ -32,13 +32,13 @@ import torch.nn.functional as F
 # In[3]:
 
 class ISIC2018Dataset(Dataset):
-    def __init__(self, data_dir=None, one_hot=True, img_transform=None, msk_transform=None):
+    def __init__(self, data_dir=None, one_hot=True, img_transform=None, msk_transform=None,**kwargs):
         # pre-set variables
         self.data_prefix = "ISIC_"
         self.target_postfix = "_segmentation"
         self.target_fex = "png"
         self.input_fex = "jpg"
-        self.data_dir = data_dir if data_dir else "/path/to/datasets/ISIC2018"
+        self.data_dir = data_dir if data_dir else "/raid/home/labusermodaresi/datasets/ISIC2018"
         self.imgs_dir = os.path.join(self.data_dir, "ISIC2018_Task1-2_Training_Input")
         self.msks_dir = os.path.join(self.data_dir, "ISIC2018_Task1_Training_GroundTruth")
         
@@ -83,9 +83,10 @@ class ISIC2018Dataset(Dataset):
     
 
 class ISIC2018DatasetFast(Dataset):
-    def __init__(self, mode, data_dir=None, one_hot=True, img_transform=None, msk_transform=None):
+    num_parts=4
+    def __init__(self, mode, data_dir=None, one_hot=True, img_transform=None, msk_transform=None,**kwargs):
         # pre-set variables
-        self.data_dir = data_dir if data_dir else "/path/to/datasets/ISIC2018/np"
+        self.data_dir = data_dir if data_dir else "/raid/home/labusermodaresi/datasets/ISIC2018/np"
         
         # input parameters
         self.one_hot = one_hot
@@ -107,19 +108,47 @@ class ISIC2018DatasetFast(Dataset):
             self.msks = Y[1815+259:2594]
         else:
             raise ValueError()
+        #print(self.imgs.shape,self.msks.shape)
+        # self.imgs=self.convert2patches(self.imgs)
+        # self.msks=self.convert2patches(self.msks)
+        self.num_class=int(self.msks.max())+1
+        #print("after",self.imgs.shape,self.msks.shape)
+    def convert2patches(self, imgs, num_parts=4):
+        # Dividing each image into 16 equal parts
+        batch_size, num_channels, height, width = imgs.shape
+        
+        # Calculate the size of each patch
+        part_height = height // int(num_parts ** 0.5)
+        part_width = width // int(num_parts ** 0.5)
+
+        # Dividing each image into parts and collecting them in a list
+        divided_parts = []
+        for i in range(batch_size):
+            img=imgs[i]#.reshape(num_channels, height, width)
+            img_parts = torch.split(img, part_height, dim=1)
+            for part in img_parts:
+                nparts=torch.split(part.detach(), part_width, dim=2)
+                divided_parts.extend(nparts)
+
+        # Creating the final tensor with shape (16*16, 3, part_size, part_size)
+        divided_tensor = torch.stack(divided_parts, dim=0)
+        
+        return divided_tensor
 
     def __len__(self):
         return len(self.imgs)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx):      
         data_id = idx
         img = self.imgs[idx]
         msk = self.msks[idx]
         
         if self.one_hot:
-            msk = F.one_hot(torch.squeeze(msk).to(torch.int64))
+            
+            msk = F.one_hot(torch.squeeze(msk).to(torch.int64),self.num_class)
             msk = torch.moveaxis(msk, -1, 0).to(torch.float)
-
+                                     
+        # print(img.shape,"msk",msk.shape)
         sample = {'image': img, 'mask': msk, 'id': data_id}
         return sample
     
@@ -131,7 +160,7 @@ class ISIC2018TrainingDataset(Dataset):
         self.target_postfix = "_segmentation"
         self.target_fex = "png"
         self.input_fex = "jpg"
-        self.data_dir = data_dir if data_dir else "/path/to/datasets/ISIC2018"
+        self.data_dir = data_dir if data_dir else "/raid/home/labusermodaresi/datasets/ISIC2018"
         self.imgs_dir = os.path.join(self.data_dir, "ISIC2018_Task1-2_Training_Input")
         self.msks_dir = os.path.join(self.data_dir, "ISIC2018_Task1_Training_GroundTruth")
         
@@ -179,7 +208,7 @@ class ISIC2018ValidationDataset(Dataset):
         self.target_postfix = "_segmentation"
         self.target_fex = "png"
         self.input_fex = "jpg"
-        self.data_dir = data_dir if data_dir else "/path/to/datasets/ISIC2018"
+        self.data_dir = data_dir if data_dir else "/raid/home/labusermodaresi/datasets/ISIC2018"
         self.imgs_dir = os.path.join(self.data_dir, "ISIC2018_Task1-2_Validation_Input")
         self.msks_dir = os.path.join(self.data_dir, "ISIC2018_Task1_Validation_GroundTruth")
         

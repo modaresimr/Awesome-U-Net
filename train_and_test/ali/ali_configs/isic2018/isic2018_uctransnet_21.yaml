@@ -8,10 +8,10 @@ dataset:
   input_size: 224
   training:
     params:
-      data_dir: "/path/to/datasets/ISIC2018"
+      data_dir: "/raid/home/labusermodaresi/datasets/ISIC2018"
   validation:
     params:
-      data_dir: "/path/to/datasets/ISIC2018"
+      data_dir: "/raid/home/labusermodaresi/datasets/ISIC2018"
   number_classes: 2
 data_loader:
   train: 

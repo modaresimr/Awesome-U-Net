@@ -20,10 +20,10 @@ class SegPC2021Dataset(Dataset):
                  one_hot=True,
                  force_rebuild=False,
                  img_transform=None, 
-                 msk_transform=None):
+                 msk_transform=None,**kwargs):
         # pre-set variables
-        self.data_dir = data_dir if data_dir else "/path/to/datasets/segpc/np"
-        self.dataset_dir = dataset_dir if dataset_dir else "/path/to/datasets/segpc/TCIA_SegPC_dataset/"
+        self.data_dir = data_dir if data_dir else "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/np"
+        self.dataset_dir = dataset_dir if dataset_dir else "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/"
         self.mode = mode
         # input parameters
         self.img_transform = img_transform
