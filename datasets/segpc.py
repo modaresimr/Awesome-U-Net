@@ -51,7 +51,7 @@ class SegPC2021Dataset(Dataset):
         self.X = np.load(f'{ADD}/cyts_{self.mode}_{self.input_size}x{self.input_size}_s{self.scale}_X.npy')
         print(f'loading Y_{self.mode}...')
         self.Y = np.load(f'{ADD}/cyts_{self.mode}_{self.input_size}x{self.input_size}_s{self.scale}_Y.npy')
-        print('finished.')
+        print(f'finished.cyts_{self.mode}_{self.input_size}x{self.input_size}_s{self.scale}_Y.npy')
 
     def __len__(self):
         return len(self.X)
@@ -61,19 +61,27 @@ class SegPC2021Dataset(Dataset):
         msk1 = self.Y[idx]
         # msk = np.where(msk<0.5, 0, 1)
         msk = np.zeros_like(msk1)
-        for i in range(1, self.number_classes):
-            msk += np.uint8(np.where(msk1 < (i/np.float(self.number_classes)), 0, 1))
+        for i in range(0, self.number_classes - 1):
+            msk += np.uint8(np.where(msk1 < 0.5 + (255. * i / self.number_classes), 0, 1))
 
+        # print(np.max((msk)))
+        # np.save('c.npy', msk1)
         if self.img_transform:
             img = self.img_transform(img)
-            img = (img - img.min())/(img.max() - img.min())
+            img = (img - img.min()) / (img.max() - img.min())
+        # np.save('b.npy', msk)
+
         if self.msk_transform:
             msk = self.msk_transform(msk)
-            msk = (msk - msk.min())/(msk.max() - msk.min())
+            # msk = (msk - msk.min())/(msk.max() - msk.min())
+        # np.save('a.npy', msk)
 
+        # print('s', msk.shape)
         if self.one_hot:
             msk = F.one_hot(torch.squeeze(msk).to(torch.int64), self.number_classes)
             msk = torch.moveaxis(msk, -1, 0).to(torch.float)
+            # print(msk.shape, 'ssss')
+            # msk[1, :, :] += msk[2, :, :]
 
         sample = {'image': img, 'mask': msk, 'id': idx}
         return sample

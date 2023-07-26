@@ -16,7 +16,7 @@ if 1:
 def ali_runner(CONFIG_FILE_PATH):
     config = load_config(CONFIG_FILE_PATH)
 
-    config['training']['epochs'] = 2
+    config['training']['epochs'] = 10
 
     import ali_common
     ali_common.execute(config)

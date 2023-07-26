@@ -7,7 +7,7 @@ dataset:
   class: 'datasets.segpc.SegPC2021Dataset'  
   input_size: 224
   scale: 2.5
-  data_dir: "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/np"
+  data_dir: "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/np_1class"
   dataset_dir: "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/"
   number_classes: 2
 data_loader:

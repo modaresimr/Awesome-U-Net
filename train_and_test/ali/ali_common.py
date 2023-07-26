@@ -45,6 +45,7 @@ def execute(config):
         workspace="modaresimr",
         log_code=True,
         log_graph=True,
+        # disabled=True,
         auto_param_logging=True,  # Can be True or False
         auto_histogram_tensorboard_logging=True,  # Can be True or False
         auto_metric_logging=True  # Can be True or False
@@ -123,13 +124,11 @@ def execute(config):
     # ------------------- params --------------------
     INPUT_SIZE = config['dataset']['input_size']
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    img_transform = transforms.Compose([
-        transforms.ToTensor()
-    ])
+    img_transform = transforms.Compose([transforms.ToTensor()])
     # transform for mask
-    msk_transform = transforms.Compose([
-        transforms.ToTensor()
-    ])
+    msk_transform = transforms.Compose([transforms.ToTensor()])
+    msk_transform = torch.tensor
+
     # ----------------- dataset --------------------
     # preparing training dataset
     tr_dataset = dataset_class(mode="tr", one_hot=True, **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
@@ -189,18 +188,20 @@ def execute(config):
     # ## Metrics
 
     # %%
+    params = {'num_classes': tr_dataset.number_classes, 'mdmc_reduce': 'samplewise', 'average': 'macro'}
     metrics = torchmetrics.MetricCollection(
         [
-            torchmetrics.F1Score(),
-            torchmetrics.Accuracy(),
-            torchmetrics.Dice(),
-            torchmetrics.Precision(),
-            torchmetrics.Specificity(),
-            torchmetrics.Recall(),
+            torchmetrics.F1Score(**params),
+            torchmetrics.Accuracy(**{**params, 'average': 'micro'}),
+            torchmetrics.Dice(**params),
+            torchmetrics.Precision(**params),
+            torchmetrics.Specificity(**params),
+            torchmetrics.Recall(**params),
             # IoU
-            torchmetrics.JaccardIndex(2)
+            torchmetrics.JaccardIndex(**params)
         ],
-        prefix='train_metrics/'
+        prefix='train_metrics/',
+
     )
 
     # train_metrics
@@ -244,7 +245,8 @@ def execute(config):
                 loss = criterion(preds, msks)
                 losses.append(loss.item())
 
-                preds_ = torch.argmax(preds, 1, keepdim=False).float()
+                # preds_ = torch.argmax(preds, 1, keepdim=False).float()
+                preds_ = torch.argmax(preds, 1, keepdim=False)
                 msks_ = torch.argmax(msks, 1, keepdim=False)
                 evaluator.update(preds_, msks_)
 
@@ -311,8 +313,11 @@ def execute(config):
                 optimizer.step()
 
                 # evaluate by metrics
-                preds_ = torch.argmax(preds, 1, keepdim=False).float()
+                # preds_ = torch.argmax(preds, 1, keepdim=False).float()
+                preds_ = torch.argmax(preds, 1, keepdim=False)
                 msks_ = torch.argmax(msks, 1, keepdim=False)
+                # print(preds_.shape, msks_.shape, 'dddddddddd')
+
                 evaluator.update(preds_, msks_)
 
                 cnt += imgs.shape[0]
@@ -419,7 +424,8 @@ def execute(config):
                 preds = model(imgs)
 
                 # evaluate by metrics
-                preds_ = torch.argmax(preds, 1, keepdim=False).float()
+                # preds_ = torch.argmax(preds, 1, keepdim=False).float()
+                preds_ = torch.argmax(preds, 1, keepdim=False)
                 msks_ = torch.argmax(msks, 1, keepdim=False)
                 evaluator.update(preds_, msks_)
             # experiment.log_confusion_matrix(
