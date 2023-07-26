@@ -9,7 +9,7 @@ dataset:
   scale: 2.5
   data_dir: "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/np_1class"
   dataset_dir: "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/"
-  number_classes: 3
+  number_classes: 2
 data_loader:
   train: 
     batch_size: 16
@@ -44,7 +44,7 @@ model:
   name: 'UNet'
   params:
     in_channels: 4
-    out_channels: 3
+    out_channels: 2
     with_bn: false
     
   class: 'models.unet.UNet'  
