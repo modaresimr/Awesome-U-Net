@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-
+from .Conv_DCFD import Conv_DCFD
 
 
 class DoubleConv(nn.Module):
@@ -27,13 +27,14 @@ class DoubleConv(nn.Module):
         return self.step(x)
 
 
-class UNet(nn.Module):
+class UNet_ACDA(nn.Module):
     def __init__(self, in_channels, out_channels, with_bn=False):
         super().__init__()
-        init_channels = 16
+        init_channels = 32
         self.out_channels = out_channels
-
-        self.en_1 = DoubleConv(in_channels    , init_channels  , with_bn)
+        # self.DCFD=Conv_DCFD(in_channels, in_channels, kernel_size=3, inter_kernel_size=5, padding=1, stride=1, bias=True) #0.5% behtar shod
+        self.en_1=Conv_DCFD(in_channels, init_channels, kernel_size=3, inter_kernel_size=5, padding=1, stride=1, bias=True) #0.5% behtar shod
+        # self.en_1 = DoubleConv(in_channels    , init_channels  , with_bn)
         self.en_2 = DoubleConv(1*init_channels, 2*init_channels, with_bn)
         self.en_3 = DoubleConv(2*init_channels, 4*init_channels, with_bn)
         self.en_4 = DoubleConv(4*init_channels, 8*init_channels, with_bn)
@@ -47,6 +48,7 @@ class UNet(nn.Module):
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear')
     
     def forward(self, x):
+        # x = self.DCFD(xx)
         e1 = self.en_1(x)
         e2 = self.en_2(self.maxpool(e1))
         e3 = self.en_3(self.maxpool(e2))
@@ -62,8 +64,3 @@ class UNet(nn.Module):
 #         if self.out_channels<2:
 #             return torch.sigmoid(d4)
 #         return torch.softmax(d4, 1)
-
-
-
-
-

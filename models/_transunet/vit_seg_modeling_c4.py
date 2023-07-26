@@ -122,6 +122,7 @@ class Mlp(nn.Module):
 class Embeddings(nn.Module):
     """Construct the embeddings from patch, position embeddings.
     """
+
     def __init__(self, config, img_size, in_channels=4):
         super(Embeddings, self).__init__()
         self.hybrid = None
@@ -132,7 +133,7 @@ class Embeddings(nn.Module):
             grid_size = config.patches["grid"]
             patch_size = (img_size[0] // 16 // grid_size[0], img_size[1] // 16 // grid_size[1])
             patch_size_real = (patch_size[0] * 16, patch_size[1] * 16)
-            n_patches = (img_size[0] // patch_size_real[0]) * (img_size[1] // patch_size_real[1])  
+            n_patches = (img_size[0] // patch_size_real[0]) * (img_size[1] // patch_size_real[1])
             self.hybrid = True
         else:
             patch_size = _pair(config.patches["size"])
@@ -149,7 +150,6 @@ class Embeddings(nn.Module):
         self.position_embeddings = nn.Parameter(torch.zeros(1, n_patches, config.hidden_size))
 
         self.dropout = Dropout(config.transformer["dropout_rate"])
-
 
     def forward(self, x):
         if self.hybrid:
@@ -341,11 +341,11 @@ class DecoderCup(nn.Module):
 
         if self.config.n_skip != 0:
             skip_channels = self.config.skip_channels
-            for i in range(4-self.config.n_skip):  # re-select the skip channels according to n_skip
-                skip_channels[3-i]=0
+            for i in range(4 - self.config.n_skip):  # re-select the skip channels according to n_skip
+                skip_channels[3 - i] = 0
 
         else:
-            skip_channels=[0,0,0,0]
+            skip_channels = [0, 0, 0, 0]
 
         blocks = [
             DecoderBlock(in_ch, out_ch, sk_ch) for in_ch, out_ch, sk_ch in zip(in_channels, out_channels, skip_channels)
@@ -368,8 +368,14 @@ class DecoderCup(nn.Module):
 
 
 class VisionTransformer(nn.Module):
-    def __init__(self, config, img_size=224, num_classes=21843, zero_head=False, vis=False):
+    def __init__(self, config=None, img_size=224, num_classes=21843, zero_head=False, vis=False):
         super(VisionTransformer, self).__init__()
+        config = CONFIGS["R50-ViT-B_16"]
+        config.n_classes = num_classes
+        config.n_skip = 3
+        if "R50-ViT-B_16".find('R50') != -1:
+            config.patches.grid = (img_size // 16, img_size // 16)
+
         self.num_classes = num_classes
         self.zero_head = zero_head
         self.classifier = config.classifier
@@ -384,7 +390,7 @@ class VisionTransformer(nn.Module):
 
     def forward(self, x):
         if x.size()[1] == 1:
-            x = x.repeat(1,4,1,1)
+            x = x.repeat(1, 4, 1, 1)
         x, attn_weights, features = self.transformer(x)  # (B, n_patch, hidden)
         x = self.decoder(x, features)
         logits = self.segmentation_head(x)
@@ -405,7 +411,7 @@ class VisionTransformer(nn.Module):
             posemb_new = self.transformer.embeddings.position_embeddings
             if posemb.size() == posemb_new.size():
                 self.transformer.embeddings.position_embeddings.copy_(posemb)
-            elif posemb.size()[1]-1 == posemb_new.size()[1]:
+            elif posemb.size()[1] - 1 == posemb_new.size()[1]:
                 posemb = posemb[:, 1:]
                 self.transformer.embeddings.position_embeddings.copy_(posemb)
             else:
@@ -439,6 +445,7 @@ class VisionTransformer(nn.Module):
                     for uname, unit in block.named_children():
                         unit.load_from(res_weight, n_block=bname, n_unit=uname)
 
+
 CONFIGS = {
     'ViT-B_16': configs.get_b16_config(),
     'ViT-B_32': configs.get_b32_config(),
@@ -449,5 +456,3 @@ CONFIGS = {
     'R50-ViT-L_16': configs.get_r50_l16_config(),
     'testing': configs.get_testing(),
 }
-
-

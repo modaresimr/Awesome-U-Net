@@ -7,6 +7,7 @@ import torch.nn as nn
 import torch
 import torch.nn.functional as F
 from .CTrans import ChannelTransformer
+from ..adapconv import Conv_DCFD
 
 
 def get_activation(activation_type):
@@ -81,7 +82,7 @@ class CCA(nn.Module):
         channel_att_x = self.mlp_x(avg_pool_x)
         avg_pool_g = F.avg_pool2d(g, (g.size(2), g.size(3)), stride=(g.size(2), g.size(3)))
         channel_att_g = self.mlp_g(avg_pool_g)
-        channel_att_sum = (channel_att_x + channel_att_g)/2.0
+        channel_att_sum = (channel_att_x + channel_att_g) / 2.0
         scale = torch.sigmoid(channel_att_sum).unsqueeze(2).unsqueeze(3).expand_as(x)
         x_after_channel = x * scale
         out = self.relu(x_after_channel)
@@ -92,7 +93,7 @@ class UpBlock_attention(nn.Module):
     def __init__(self, in_channels, out_channels, nb_Conv, activation='ReLU'):
         super().__init__()
         self.up = nn.Upsample(scale_factor=2)
-        self.coatt = CCA(F_g=in_channels//2, F_x=in_channels//2)
+        self.coatt = CCA(F_g=in_channels // 2, F_x=in_channels // 2)
         self.nConvs = _make_nConv(in_channels, out_channels, nb_Conv, activation)
 
     def forward(self, x, skip_x):
@@ -102,31 +103,35 @@ class UpBlock_attention(nn.Module):
         return self.nConvs(x)
 
 
-class UCTransNet(nn.Module):
-    def __init__(self, config=uct_config.get_CTranS_config(), n_channels=3, n_classes=1, img_size=224, vis=False):
+class UCTransNet_ACDA(nn.Module):
+    def __init__(self, config=uct_config.get_CTranS_config(), n_channels=3, n_classes=1, img_size=224, vis=False, num_bases=6, DCFD_kernel_size=3):
         super().__init__()
-
         self.vis = vis
         self.n_channels = n_channels
         self.n_classes = n_classes
-        in_channels = config.base_channel
-        self.inc = ConvBatchNorm(n_channels, in_channels)
-        self.down1 = DownBlock(in_channels, in_channels*2, nb_Conv=2)
-        self.down2 = DownBlock(in_channels*2, in_channels*4, nb_Conv=2)
-        self.down3 = DownBlock(in_channels*4, in_channels*8, nb_Conv=2)
-        self.down4 = DownBlock(in_channels*8, in_channels*8, nb_Conv=2)
+        in_channels = config.base_channel 
+        self.DCFD = Conv_DCFD(n_channels, n_channels, kernel_size=DCFD_kernel_size, inter_kernel_size=DCFD_kernel_size,
+                              padding=DCFD_kernel_size // 2, stride=1, bias=True, num_bases=num_bases)
+        
+        self.inc = ConvBatchNorm(n_channels * num_bases, in_channels)
+        self.down1 = DownBlock(in_channels, in_channels * 2, nb_Conv=2)
+        self.down2 = DownBlock(in_channels * 2, in_channels * 4, nb_Conv=2)
+        self.down3 = DownBlock(in_channels * 4, in_channels * 8, nb_Conv=2)
+        self.down4 = DownBlock(in_channels * 8, in_channels * 8, nb_Conv=2)
         self.mtc = ChannelTransformer(config, vis, img_size,
-                                      channel_num=[in_channels, in_channels*2, in_channels*4, in_channels*8],
+                                      channel_num=[in_channels, in_channels * 2, in_channels * 4, in_channels * 8],
                                       patchSize=config.patch_sizes)
-        self.up4 = UpBlock_attention(in_channels*16, in_channels*4, nb_Conv=2)
-        self.up3 = UpBlock_attention(in_channels*8, in_channels*2, nb_Conv=2)
-        self.up2 = UpBlock_attention(in_channels*4, in_channels, nb_Conv=2)
-        self.up1 = UpBlock_attention(in_channels*2, in_channels, nb_Conv=2)
+        self.up4 = UpBlock_attention(in_channels * 16, in_channels * 4, nb_Conv=2)
+        self.up3 = UpBlock_attention(in_channels * 8, in_channels * 2, nb_Conv=2)
+        self.up2 = UpBlock_attention(in_channels * 4, in_channels, nb_Conv=2)
+        self.up1 = UpBlock_attention(in_channels * 2, in_channels, nb_Conv=2)
         self.outc = nn.Conv2d(in_channels, n_classes, kernel_size=(1, 1), stride=(1, 1))
         self.last_activation = nn.Sigmoid()  # if using BCELoss
 
     def forward(self, x):
-        x = x.float()
+        xx = self.DCFD(x)
+        x = xx.float()
+
         x1 = self.inc(x)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
