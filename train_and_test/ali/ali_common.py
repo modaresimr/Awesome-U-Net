@@ -20,10 +20,10 @@ import ali_utils
 
 
 def execute(config):
-    
+
     model_class = ali_utils.class_by_name(config['model']['class'])
     dataset_class = ali_utils.class_by_name(config['dataset']['class'])
-    key = config.get('run',{}).get('key') or 'None'
+    key = config.get('run', {}).get('key') or 'None'
     # %% [markdown]
     # # UCTransNet - ISIC2018
     # ---
@@ -132,9 +132,9 @@ def execute(config):
     ])
     # ----------------- dataset --------------------
     # preparing training dataset
-    tr_dataset = dataset_class(mode="tr", one_hot=True,**config['dataset'],img_transform=img_transform,msk_transform=msk_transform)
-    vl_dataset = dataset_class(mode="vl", one_hot=True,**config['dataset'],img_transform=img_transform,msk_transform=msk_transform)
-    te_dataset = dataset_class(mode="te", one_hot=True,**config['dataset'],img_transform=img_transform,msk_transform=msk_transform)
+    tr_dataset = dataset_class(mode="tr", one_hot=True, **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
+    vl_dataset = dataset_class(mode="vl", one_hot=True, **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
+    te_dataset = dataset_class(mode="te", one_hot=True, **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
 
     # We consider 1815 samples for training, 259 samples for validation and 520 samples for testing
     # !cat ~/deeplearning/skin/Prepare_ISIC2018.py
@@ -451,8 +451,31 @@ def execute(config):
     model = model_class(**config['model']['params'])
     # train(model)
 
-    # Seamlessly log your Pytorch model
+    # def get_flops(model):
+    #     def count_flops(layer, input_size, output_size):
+    #         flops = layer.in_channels * layer.out_channels * layer.kernel_size[0] * layer.kernel_size[1] * output_size[0] * output_size[1]
+    #         return flops
+    #     dummy_input = torch.randn(1, 4, 224, 224)
+    #     # Enable profiling
+    #     with torch.autograd.profiler.profile(use_cuda=True) as prof:
+    #         # Temporarily change the model's input size to match dummy_input
+    #         # Forward pass to profile FLOPs
+    #         model(dummy_input)
 
+    #         # Reset the model's input size back to the original
+
+    #     total_flops = 0
+    #     for layer in model.children():
+    #         if isinstance(layer, nn.Conv2d):
+    #             input_size = dummy_input.size()[2:]
+    #             flops = count_flops(layer, input_size, (224, 224))  # Since the input size is fixed, use the original 224x224 size
+    #             total_flops += flops
+
+    #     gflops = total_flops / prof.self_cpu_time_total / 1e9  # Divide by total time in seconds and convert to GFLOPS
+
+    #     return gflops
+    # # Seamlessly log your Pytorch model
+    # print("-===================", get_flops(model))
     experiment.log_parameters(config)
 
     torch.cuda.empty_cache()
@@ -460,6 +483,7 @@ def execute(config):
     number_of_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print("Number of parameters:", number_of_parameters)
     experiment.log_parameter("Number of parameters", number_of_parameters)
+
     experiment.set_model_graph(str(model))
 
     os.makedirs(config['model']['save_dir'], exist_ok=True)
@@ -507,6 +531,10 @@ def execute(config):
         te_metrics = test(best_model, te_dataloader)
         metrics = te_metrics.compute()
         experiment.log_metrics(metrics)
+        print(metrics)
+        df = pd.DataFrame({k.replace("test_metrics/", ""): v for k, v in metrics.items()}, index=[0])
+        from IPython.display import display
+        display(df)
         experiment.end()
 
         metrics

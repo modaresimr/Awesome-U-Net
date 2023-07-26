@@ -9,7 +9,7 @@ dataset:
   scale: 2.5
   data_dir: "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/np"
   dataset_dir: "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/"
-  number_classes: 3
+  number_classes: 2
 data_loader:
   train: 
     batch_size: 16
@@ -39,13 +39,15 @@ training:
     patience: 10
   epochs: 100
 model:
-  save_dir: '../../saved_models/segpc2021_unet'
   load_weights: false
-  name: 'UNet'
+  name: 'UCTransNet'
   params:
-    in_channels: 4
-    out_channels: 3
-    with_bn: false
-    
-  class: 'models.unet.UNet'  
+    n_channels: 4
+    n_classes: 2
+    DCFD_kernel_size: 9
+  class: 'models._uctransnet.UCTransNet_ACDA.UCTransNet_ACDA'
+  save_dir: '../../saved_models/segpc2021_uctransnet_9'
 # preprocess:
+
+run:
+  key: "dks:9"
