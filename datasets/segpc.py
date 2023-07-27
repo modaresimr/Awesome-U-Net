@@ -19,7 +19,7 @@ class SegPC2021Dataset(Dataset):
                  one_hot=True,
                  force_rebuild=False,
                  img_transform=None,
-                 msk_transform=None, number_classes=3, **kwargs):
+                 msk_transform=None, cytoplasm=True, nucleus=True, **kwargs):
         # pre-set variables
         self.data_dir = data_dir if data_dir else "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/np"
         self.dataset_dir = dataset_dir if dataset_dir else "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/"
@@ -30,7 +30,10 @@ class SegPC2021Dataset(Dataset):
         self.input_size = input_size
         self.scale = scale
         self.one_hot = one_hot
-        self.number_classes = number_classes
+        self.number_classes = nucleus + cytoplasm + 1
+        # print(nucleus, cytoplasm, self.number_classes, 'dddddddd')
+        self.nucleus = nucleus
+        self.cytoplasm = cytoplasm
         # loading data
         self.load_dataset(force_rebuild=force_rebuild)
 
@@ -59,10 +62,12 @@ class SegPC2021Dataset(Dataset):
     def __getitem__(self, idx):
         img = self.X[idx]
         msk1 = self.Y[idx]
-        # msk = np.where(msk<0.5, 0, 1)
-        msk = np.zeros_like(msk1)
-        for i in range(0, self.number_classes - 1):
-            msk += np.uint8(np.where(msk1 < 0.5 + (255. * i / self.number_classes), 0, 1))
+        if self.cytoplasm and not self.nucleus:
+            msk = np.where(msk1 < 0.5, 0, 1)
+        elif self.nucleus and not self.cytoplasm:
+            msk = np.where(msk1 < 200, 0, 1)
+        else:
+            msk = np.uint8(np.where(msk1 < 0.5, 0, 1) + np.where(msk1 < 200, 0, 1))
 
         # print(np.max((msk)))
         # np.save('c.npy', msk1)

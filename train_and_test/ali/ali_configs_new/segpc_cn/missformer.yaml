@@ -1,0 +1,17 @@
+
+training:
+  optimizer:
+    name: 'SGD'
+    params:
+      lr: 0.0001
+      momentum: 0.9
+      weight_decay: 0.0001
+  # epochs: 500
+model:
+  load_weights: false
+  name: 'MISSFormer'
+  params:
+    in_ch: 4
+    num_classes: 3
+  class: 'models._missformer.MISSFormer.MISSFormer'  
+# preprocess:

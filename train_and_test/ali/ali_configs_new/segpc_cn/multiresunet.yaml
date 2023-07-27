@@ -1,0 +1,9 @@
+model:
+  load_weights: false
+  name: 'MultiResUnet'
+  params:
+    channels: 4
+    filters: 32
+    nclasses: 3
+  class: 'models.multiresunet.MultiResUnet'  
+    # preprocess:

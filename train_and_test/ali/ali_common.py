@@ -50,8 +50,10 @@ def execute(config):
         auto_histogram_tensorboard_logging=True,  # Can be True or False
         auto_metric_logging=True  # Can be True or False
     )
+    experiment.add_tag(config['config']['name'])
     experiment.add_tag(model_class.__name__)
     experiment.add_tag(key)
+
     # Report multiple hyperparameters using a dictionary:
     # experiment.display(tab='Tab Name')
 

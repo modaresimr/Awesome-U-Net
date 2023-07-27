@@ -1,0 +1,10 @@
+model:
+  load_weights: false
+  name: 'NestedUNet'
+  params:
+    num_classes: 3
+    input_channels: 4
+    deep_supervision: false
+  class: 'models.unetpp.NestedUNet'
+ 
+# preprocess:

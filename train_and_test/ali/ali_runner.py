@@ -14,9 +14,14 @@ if 1:
 
 
 def ali_runner(CONFIG_FILE_PATH):
-    config = load_config(CONFIG_FILE_PATH)
-
-    config['training']['epochs'] = 10
+    parent = os.path.dirname(CONFIG_FILE_PATH)
+    config = load_config(parent + "/dataset.yaml")
+    config = {**config, **load_config(parent + "/common.yaml")}
+    config = {**config, **load_config(CONFIG_FILE_PATH)}
+    config['config'] = {'name': parent.split("/")[-1] + "_" + CONFIG_FILE_PATH.split("/")[-1]}
+    config['model']['save_dir'] = '../../saved_models/' + config['config']['name']
+    os.rmdir(config['model']['save_dir'], ignore_errors=True)
+    config['training']['epochs'] = 100
 
     import ali_common
     ali_common.execute(config)

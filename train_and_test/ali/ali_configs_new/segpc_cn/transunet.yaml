@@ -1,0 +1,18 @@
+training:
+  optimizer:
+#     name: 'Adam'
+#     params:
+#       lr: 0.0001
+    name: "SGD"
+    params:
+      lr: 0.0001
+      momentum: 0.9
+      weight_decay: 0.0001
+model:
+  load_weights: false
+  name: 'VisionTransformer'
+  params:
+    img_size: 224
+    num_classes: 3
+    # preprocess:
+  class: 'models._transunet.vit_seg_modeling_c4.VisionTransformer'  
