@@ -1,1 +1,2 @@
 torchmetrics==0.10.3
+einops

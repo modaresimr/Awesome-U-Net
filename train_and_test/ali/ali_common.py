@@ -574,6 +574,7 @@ def execute(config):
         df = pd.DataFrame({k.replace("test_metrics/", ""): v for k, v in metrics.items()}, index=[0])
         from IPython.display import display
         display(df)
+        df.to_json(f"{config['model']['save_dir']}/test_final_result.json")
         experiment.end()
 
         metrics
