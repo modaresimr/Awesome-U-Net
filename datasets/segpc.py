@@ -63,7 +63,7 @@ class SegPC2021Dataset(Dataset):
         img = self.X[idx]
         msk1 = self.Y[idx]
         if self.cytoplasm and not self.nucleus:
-            msk = np.where(msk1 < 0.5, 0, 1)
+            msk = np.where((msk1 < 200) & (msk1 > 0.5), 1, 0)
         elif self.nucleus and not self.cytoplasm:
             msk = np.where(msk1 < 200, 0, 1)
         else:
