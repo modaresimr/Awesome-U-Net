@@ -118,7 +118,6 @@ def execute(config):
     # ## Dataset and Dataloader
 
     # %%
-    from datasets.isic import ISIC2018DatasetFast
     from torch.utils.data import DataLoader, Subset
     from torchvision import transforms
 
@@ -133,9 +132,9 @@ def execute(config):
 
     # ----------------- dataset --------------------
     # preparing training dataset
-    tr_dataset = dataset_class(mode="tr", one_hot=True, **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
-    vl_dataset = dataset_class(mode="vl", one_hot=True, **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
-    te_dataset = dataset_class(mode="te", one_hot=True, **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
+    tr_dataset = dataset_class(mode="tr", **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
+    vl_dataset = dataset_class(mode="vl", **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
+    te_dataset = dataset_class(mode="te", **config['dataset'], img_transform=img_transform, msk_transform=msk_transform)
 
     # We consider 1815 samples for training, 259 samples for validation and 520 samples for testing
     # !cat ~/deeplearning/skin/Prepare_ISIC2018.py
@@ -160,7 +159,8 @@ def execute(config):
         msk = sample['mask']
         print("\n Training")
         # show_sbs(img[0], msk[0, 1])
-        experiment.log_image(img[0], image_channels="first", name="train/groundtruth")
+        experiment.log_image(img[0], image_channels="first", name="train/img")
+        experiment.log_image(msk[0], image_channels="first", name="train/gt")
         break
 
     for sample in vl_dataloader:
@@ -168,7 +168,8 @@ def execute(config):
         msk = sample['mask']
         print("Validation")
         # show_sbs(img[0], msk[0, 1])
-        experiment.log_image(img[0], image_channels="first", name="val/groundtruth")
+        experiment.log_image(img[0], image_channels="first", name="val/img")
+        experiment.log_image(msk[0], image_channels="first", name="val/gt")
         break
 
     for sample in te_dataloader:
@@ -176,7 +177,8 @@ def execute(config):
         msk = sample['mask']
         print("Test")
         # show_sbs(img[0], msk[0, 1])
-        experiment.log_image(img[0], image_channels="first", name="test/groundtruth")
+        experiment.log_image(img[0], image_channels="first", name="test/img")
+        experiment.log_image(msk[0], image_channels="first", name="test/gt")
         break
 
     # %% [markdown]
@@ -190,7 +192,10 @@ def execute(config):
     # ## Metrics
 
     # %%
-    params = {'num_classes': tr_dataset.number_classes, 'mdmc_reduce': 'samplewise', 'average': 'macro'}
+    if tr_dataset.number_classes > 2:
+        params = {'num_classes': tr_dataset.number_classes, 'mdmc_reduce': 'samplewise', 'average': 'macro'}
+    else:
+        params = {}
     metrics = torchmetrics.MetricCollection(
         [
             torchmetrics.F1Score(**params),
@@ -200,7 +205,7 @@ def execute(config):
             torchmetrics.Specificity(**params),
             torchmetrics.Recall(**params),
             # IoU
-            torchmetrics.JaccardIndex(**params)
+            torchmetrics.JaccardIndex(**{**params, 'num_classes': tr_dataset.number_classes})
         ],
         prefix='train_metrics/',
 
@@ -214,6 +219,7 @@ def execute(config):
 
     # test_metrics
     test_metrics = metrics.clone(prefix='test_metrics/').to(device)
+    final_test_metrics = metrics.clone(prefix='final_test_metrics/').to(device)
 
     # %%
     def make_serializeable_metrics(computed_metrics):
@@ -226,7 +232,7 @@ def execute(config):
     # ## Define validate function
 
     # %%
-    def validate(model, criterion, vl_dataloader):
+    def validate(model, criterion, vl_dataloader, valid_metrics):
         model.eval()
         with torch.no_grad():
 
@@ -247,8 +253,10 @@ def execute(config):
                 loss = criterion(preds, msks)
                 losses.append(loss.item())
 
-                # preds_ = torch.argmax(preds, 1, keepdim=False).float()
                 preds_ = torch.argmax(preds, 1, keepdim=False)
+                if tr_dataset.number_classes <= 2:
+                    preds_ = preds_.float()
+
                 msks_ = torch.argmax(msks, 1, keepdim=False)
                 evaluator.update(preds_, msks_)
 
@@ -317,6 +325,8 @@ def execute(config):
                 # evaluate by metrics
                 # preds_ = torch.argmax(preds, 1, keepdim=False).float()
                 preds_ = torch.argmax(preds, 1, keepdim=False)
+                if tr_dataset.number_classes <= 2:
+                    preds_ = preds_.float()
                 msks_ = torch.argmax(msks, 1, keepdim=False)
                 # print(preds_.shape, msks_.shape, 'dddddddddd')
 
@@ -333,8 +343,8 @@ def execute(config):
             tr_loss = np.sum(tr_losses) / cnt
 
             # validate model
-            vl_metrics, vl_loss = validate(model, criterion, vl_dataloader)
-            te_metrics, te_loss = validate(model, criterion, te_dataloader)
+            vl_metrics, vl_loss = validate(model, criterion, vl_dataloader, valid_metrics)
+            te_metrics, te_loss = validate(model, criterion, te_dataloader, test_metrics)
             epoch_info = {
                 'tr_loss': tr_loss,
                 'vl_loss': vl_loss,
@@ -350,7 +360,7 @@ def execute(config):
                 best_result = epoch_info
 
             print(
-                f"trl={tr_loss:0.5f} vll={vl_loss:0.5f}   best_te: loss={best_result['te_loss']:0.5f} acc:{best_result['te_metrics']['valid_metrics/Accuracy']:0.5f} tpr:{best_result['te_metrics']['valid_metrics/Recall']:0.5f} prc:{best_result['te_metrics']['valid_metrics/Precision']:0.5f} f1:{best_result['te_metrics']['valid_metrics/F1Score']:0.5f}")
+                f"trl={tr_loss:0.5f} vll={vl_loss:0.5f}   best_te: loss={best_result['te_loss']:0.5f} acc:{best_result['te_metrics']['test_metrics/Accuracy']:0.5f} tpr:{best_result['te_metrics']['test_metrics/Recall']:0.5f} prc:{best_result['te_metrics']['test_metrics/Precision']:0.5f} f1:{best_result['te_metrics']['test_metrics/F1Score']:0.5f}")
             # write the final results
 
             experiment.log_metric('_loss', epoch_info['tr_loss'], epoch=epoch)
@@ -368,15 +378,18 @@ def execute(config):
 
             with experiment.validate():
                 experiment.log_metric("_loss", epoch_info['vl_loss'], epoch=epoch)
-                experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['vl_metrics'].items()}, epoch=epoch)
+                import re
+                # experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['vl_metrics'].items()}, epoch=epoch)
+                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k): v for k, v in epoch_info['vl_metrics'].items()}, epoch=epoch)
                 # experiment.log_confusion_matrix
 
             with experiment.test():
                 experiment.log_metric("_loss", epoch_info['te_loss'], epoch=epoch)
-                experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
-
+                # experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
+                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
                 # experiment.log_metric("best_loss",epoch_info['te_loss'], epoch=epoch)
-                experiment.log_metrics({k.replace("valid_", "best_").replace("metrics/", ""): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
+                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_")): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
+                # experiment.log_metrics({k.replace("valid_", "best_").replace("metrics/", ""): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
 
             epochs_info.append(epoch_info)
     #         epoch_tqdm.set_description(f"Epoch:{epoch+1}/{EPOCHS} -> tr_loss:{tr_loss}, vl_loss:{vl_loss}")
@@ -415,7 +428,7 @@ def execute(config):
     def test(model, te_dataloader):
         model.eval()
         with torch.no_grad():
-            evaluator = test_metrics.clone().to(device)
+            evaluator = final_test_metrics.clone().to(device)
             for batch_data in tqdm(te_dataloader):
                 imgs = batch_data['image']
                 msks = batch_data['mask']
@@ -428,6 +441,8 @@ def execute(config):
                 # evaluate by metrics
                 # preds_ = torch.argmax(preds, 1, keepdim=False).float()
                 preds_ = torch.argmax(preds, 1, keepdim=False)
+                if te_dataset.number_classes <= 2:
+                    preds_ = preds_.float()
                 msks_ = torch.argmax(msks, 1, keepdim=False)
                 evaluator.update(preds_, msks_)
             # experiment.log_confusion_matrix(
