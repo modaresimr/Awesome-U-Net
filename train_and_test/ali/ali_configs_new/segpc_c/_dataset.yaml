@@ -7,3 +7,4 @@ dataset:
   dataset_dir: "/raid/home/labusermodaresi/datasets/TCIA_SegPC_dataset/"
   cytoplasm: true
   nucleus: false
+  one_hot: true

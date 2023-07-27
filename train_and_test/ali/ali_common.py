@@ -143,14 +143,20 @@ def execute(config):
     print(f"Length of validation_dataset:\t{len(vl_dataset)}")
     print(f"Length of test_dataset:\t\t{len(te_dataset)}")
 
+    def seed_worker(worker_id):
+        worker_seed = torch.initial_seed() % 2**32
+        np.random.seed(worker_seed)
+        random.seed(worker_seed)
+    g = torch.Generator()
+    g.manual_seed(0)
     # prepare train dataloader
-    tr_dataloader = DataLoader(tr_dataset, **config['data_loader']['train'])
+    tr_dataloader = DataLoader(tr_dataset, worker_init_fn=seed_worker, generator=g, **config['data_loader']['train'])
 
     # prepare validation dataloader
-    vl_dataloader = DataLoader(vl_dataset, **config['data_loader']['validation'])
+    vl_dataloader = DataLoader(vl_dataset, worker_init_fn=seed_worker, generator=g, **config['data_loader']['validation'])
 
     # prepare test dataloader
-    te_dataloader = DataLoader(te_dataset, **config['data_loader']['test'])
+    te_dataloader = DataLoader(te_dataset, worker_init_fn=seed_worker, generator=g, **config['data_loader']['test'])
 
     # -------------- test -----------------
     # test and visualize the input data
@@ -335,6 +341,12 @@ def execute(config):
                 if tr_dataset.number_classes <= 2:
                     preds_ = preds_.float()
                 msks_ = torch.argmax(msks, 1, keepdim=False)
+
+                if config['dataset']['class_name'] == "SegPC2021Dataset":
+                    not_nucs = torch.where(imgs[:, -1, :, :] > 0, 0, 1)
+                    preds_ = (preds_ * not_nucs).int()
+                    msks_ = (msks_ * not_nucs).int()
+
                 # print(preds_.shape, msks_.shape, 'dddddddddd')
                 evaluator.update(preds_, msks_)
                 # allmsks.append(msks_.cpu().numpy())
@@ -397,7 +409,8 @@ def execute(config):
                 # experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
                 experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
                 # experiment.log_metric("best_loss",epoch_info['te_loss'], epoch=epoch)
-                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_")): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
+                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_"))
+                                       : v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
                 # experiment.log_metrics({k.replace("valid_", "best_").replace("metrics/", ""): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
 
             epochs_info.append(epoch_info)
