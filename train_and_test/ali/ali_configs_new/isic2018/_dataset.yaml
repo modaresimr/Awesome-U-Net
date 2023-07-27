@@ -9,3 +9,4 @@ dataset:
     params:
       data_dir: "/raid/home/labusermodaresi/datasets/ISIC2018"
   number_classes: 2
+  one_hot: true

@@ -409,8 +409,7 @@ def execute(config):
                 # experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
                 experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
                 # experiment.log_metric("best_loss",epoch_info['te_loss'], epoch=epoch)
-                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_"))
-                                       : v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
+                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_")): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
                 # experiment.log_metrics({k.replace("valid_", "best_").replace("metrics/", ""): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
 
             epochs_info.append(epoch_info)
@@ -583,11 +582,15 @@ def execute(config):
         metrics = te_metrics.compute()
         experiment.log_metrics(metrics)
 
-        print(metrics)
-        df = pd.DataFrame({k.replace("test_metrics/", ""): v for k, v in metrics.items()}, index=[0])
+        print("TEST====", metrics)
+        metrics_dic = {k.replace("test_metrics/", ""): float(v.cpu()) for k, v in metrics.items()}
+        df = pd.DataFrame(metrics_dic, index=[0])
         from IPython.display import display
         display(df)
-        df.to_json(f"{config['model']['save_dir']}/test_final_result.json")
+        with open(f"{config['model']['save_dir']}/test_final_result.json", 'w') as f:
+
+            json.dump(metrics_dic, f, indent=4)
+
         experiment.end()
 
         metrics

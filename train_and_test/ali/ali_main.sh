@@ -2,9 +2,24 @@
 
 for f in $(ls ali_configs_new/isic2018);do
 	if [[ $f != '_*' ]]; then 
-		python3 ali_runner.py ./ali_configs_new/isic2018/$f
+		echo python3 ali_runner.py ./ali_configs_new/isic2018/$f
 	fi
 done
+
+
+python3 ali_runner.py ./ali_configs_new/isic2018/unet.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_7.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_7.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet.yaml
+
+python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/multiresunet.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/resunet.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
+
+python3 ali_runner.py ./ali_configs_new/isic2018/unetpp.yaml
+
 
 # for f in $(ls ali_configs_new/isic2018');do
 # 	python3 ali_runner.py ./ali_configs/isic2018/$f
