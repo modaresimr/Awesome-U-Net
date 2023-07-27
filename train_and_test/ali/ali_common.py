@@ -232,7 +232,7 @@ def execute(config):
     # ## Define validate function
 
     # %%
-    def validate(model, criterion, vl_dataloader, valid_metrics):
+    def validate(model, criterion, vl_dataloader, valid_metrics, typ='val', epoch=-1):
         model.eval()
         with torch.no_grad():
 
@@ -240,6 +240,8 @@ def execute(config):
 
             losses = []
             cnt = 0.
+            allmsks = []
+            allpreds = []
             for batch, batch_data in enumerate(vl_dataloader):
                 imgs = batch_data['image']
                 msks = batch_data['mask']
@@ -258,12 +260,15 @@ def execute(config):
                     preds_ = preds_.float()
 
                 msks_ = torch.argmax(msks, 1, keepdim=False)
+                # print(msks_.max(), msks_.shape, preds_.max(), 'ddddddddd')
                 evaluator.update(preds_, msks_)
+                # allmsks.append(msks_.cpu().numpy())
+                # allpreds.append(preds_.cpu().numpy())
 
     #             _cml = f"curr_mean-loss:{np.sum(losses)/cnt:0.5f}"
     #             _bl = f"batch-loss:{losses[-1]/msks.shape[0]:0.5f}"
     #             iterator.set_description(f"Validation) batch:{batch+1:04d} -> {_cml}, {_bl}")
-
+            # experiment.log_confusion_matrix(np.concatenate(allmsks, axis=0) > 0, np.concatenate(allpreds, axis=0) > 0, epoch=epoch, title=typ)
             # print the final results
             loss = np.sum(losses) / cnt
             metrics = evaluator.compute()
@@ -307,6 +312,8 @@ def execute(config):
             tr_iterator = tqdm(enumerate(tr_dataloader))
             tr_losses = []
             cnt = 0
+            allmsks = []
+            allpreds = []
             for batch, batch_data in tr_iterator:
                 # if batch % 38 != 0:
                 #     continue
@@ -329,8 +336,9 @@ def execute(config):
                     preds_ = preds_.float()
                 msks_ = torch.argmax(msks, 1, keepdim=False)
                 # print(preds_.shape, msks_.shape, 'dddddddddd')
-
                 evaluator.update(preds_, msks_)
+                # allmsks.append(msks_.cpu().numpy())
+                # allpreds.append(preds_.cpu().numpy())
 
                 cnt += imgs.shape[0]
                 tr_losses.append(loss.item())
@@ -340,11 +348,12 @@ def execute(config):
                 _bl = f"mean_batch-loss:{tr_losses[-1]/imgs.shape[0]:0.5f}"
                 tr_iterator.set_description(f"Training) ep:{epoch:03d}, batch:{batch+1:04d} -> {_cml}, {_bl}")
 
+            # experiment.log_confusion_matrix(np.concatenate(allmsks) > 0, np.concatenate(allpreds) > 0, epoch=epoch, title='train')
             tr_loss = np.sum(tr_losses) / cnt
 
             # validate model
-            vl_metrics, vl_loss = validate(model, criterion, vl_dataloader, valid_metrics)
-            te_metrics, te_loss = validate(model, criterion, te_dataloader, test_metrics)
+            vl_metrics, vl_loss = validate(model, criterion, vl_dataloader, valid_metrics, typ='val', epoch=epoch)
+            te_metrics, te_loss = validate(model, criterion, te_dataloader, test_metrics, typ='test in train', epoch=epoch)
             epoch_info = {
                 'tr_loss': tr_loss,
                 'vl_loss': vl_loss,
@@ -429,6 +438,8 @@ def execute(config):
         model.eval()
         with torch.no_grad():
             evaluator = final_test_metrics.clone().to(device)
+            allmsks = []
+            allpreds = []
             for batch_data in tqdm(te_dataloader):
                 imgs = batch_data['image']
                 msks = batch_data['mask']
@@ -444,7 +455,10 @@ def execute(config):
                 if te_dataset.number_classes <= 2:
                     preds_ = preds_.float()
                 msks_ = torch.argmax(msks, 1, keepdim=False)
+
                 evaluator.update(preds_, msks_)
+                # allmsks.append(msks_.cpu().numpy())
+                # allpreds.append(preds_.cpu().numpy())
             # experiment.log_confusion_matrix(
             #     msks,
             #     preds_,
@@ -453,6 +467,7 @@ def execute(config):
             #     file_name="confusion-matrix-test.json",
             #     image_channels='first'
             # )
+            # experiment.log_confusion_matrix(np.concatenate(allmsks) > 0, np.concatenate(allpreds) > 0, title='test')
         return evaluator
 
     # %% [markdown]
@@ -554,6 +569,7 @@ def execute(config):
         te_metrics = test(best_model, te_dataloader)
         metrics = te_metrics.compute()
         experiment.log_metrics(metrics)
+
         print(metrics)
         df = pd.DataFrame({k.replace("test_metrics/", ""): v for k, v in metrics.items()}, index=[0])
         from IPython.display import display

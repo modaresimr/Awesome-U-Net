@@ -37,7 +37,7 @@ class SegPC2021Dataset(Dataset):
         # loading data
         self.load_dataset(force_rebuild=force_rebuild)
 
-    def load_dataset(self, force_rebuild):
+    def load_dataset(self, force_rebuild=False):
         INPUT_SIZE = self.input_size
         ADD = self.data_dir
 
