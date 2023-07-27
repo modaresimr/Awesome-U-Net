@@ -1,0 +1,14 @@
+training:
+  optimizer:
+    name: 'Adam'
+    params:
+      lr: 0.0005
+model:
+  load_weights: false
+  name: 'MultiResUnet'
+  params:
+    channels: 3
+    filters: 32
+    nclasses: 2
+  class: 'models.multiresunet.MultiResUnet'  
+    # preprocess:
