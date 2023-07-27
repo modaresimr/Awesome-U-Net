@@ -112,6 +112,7 @@ class ISIC2018DatasetFast(Dataset):
         # self.imgs=self.convert2patches(self.imgs)
         # self.msks=self.convert2patches(self.msks)
         self.num_class=int(self.msks.max())+1
+        self.number_classes=self.num_class
         #print("after",self.imgs.shape,self.msks.shape)
     def convert2patches(self, imgs, num_parts=4):
         # Dividing each image into 16 equal parts
