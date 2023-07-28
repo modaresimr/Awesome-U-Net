@@ -31,7 +31,6 @@ class SegPC2021Dataset(Dataset):
         self.scale = scale
         self.one_hot = one_hot
         self.number_classes = nucleus + cytoplasm + 1
-        # print(nucleus, cytoplasm, self.number_classes, 'dddddddd')
         self.nucleus = nucleus
         self.cytoplasm = cytoplasm
         # loading data
@@ -82,6 +81,7 @@ class SegPC2021Dataset(Dataset):
         # np.save('a.npy', msk)
 
         # print('s', msk.shape)
+
         if self.one_hot:
             msk = F.one_hot(torch.squeeze(msk).to(torch.int64), self.number_classes)
             msk = torch.moveaxis(msk, -1, 0).to(torch.float)

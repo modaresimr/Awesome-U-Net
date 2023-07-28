@@ -24,7 +24,7 @@ def ali_runner(CONFIG_FILE_PATH):
         os.removedirs(config['model']['save_dir'])
     except:
         pass
-    config['training']['epochs'] = 4
+    config['training']['epochs'] = 100
 
     import ali_common
     ali_common.execute(config)

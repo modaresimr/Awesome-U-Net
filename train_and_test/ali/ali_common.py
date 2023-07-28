@@ -344,8 +344,8 @@ def execute(config):
 
                 if config['dataset']['class_name'] == "SegPC2021Dataset":
                     not_nucs = torch.where(imgs[:, -1, :, :] > 0, 0, 1)
-                    preds_ = (preds_ * not_nucs).int()
-                    msks_ = (msks_ * not_nucs).int()
+                    preds_ = ((torch.tensor(preds_) > 0.5) * not_nucs).int()
+                    msks_ = (torch.tensor(msks_) * not_nucs).int()
 
                 # print(preds_.shape, msks_.shape, 'dddddddddd')
                 evaluator.update(preds_, msks_)
@@ -409,7 +409,7 @@ def execute(config):
                 # experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
                 experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
                 # experiment.log_metric("best_loss",epoch_info['te_loss'], epoch=epoch)
-                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_")): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
+                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_"))                                       : v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
                 # experiment.log_metrics({k.replace("valid_", "best_").replace("metrics/", ""): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
 
             epochs_info.append(epoch_info)
