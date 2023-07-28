@@ -6,7 +6,7 @@ model:
     out_channels: 2
     with_bn: false
     adaptive_kernel_min_size: 3
-    adaptive_kernel_max_size: 7
+    adaptive_kernel_max_size: 9
 
     
   class: 'models.unet_ACDA.UNet_ACDA'  

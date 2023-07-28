@@ -5,7 +5,7 @@ model:
     in_channels: 4
     out_channels: 2
     with_bn: false
+    first_kernel_size: 5
     
-    
-  class: 'models.adapt_unet.AdaptUNet'  
+  class: 'models.unet.UNet'  
 # preprocess:

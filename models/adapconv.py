@@ -35,17 +35,18 @@ class Bases_Drop(nn.Module):
         return x
 
 
-def bases_list(ks, num_bases):
-    len_list = ks // 2
+def bases_list(adaptive_kernel_min_size, adaptive_kernel_max_size, num_bases):
+
     b_list = []
-    for i in range(len_list):
-        kernel_size = (i + 1) * 2 + 1
+    for kernel_size in range(adaptive_kernel_min_size, adaptive_kernel_max_size + 1, 2):
+        i = kernel_size // 2 - 1
         normed_bases, _, _ = calculate_FB_bases(i + 1)
         normed_bases = normed_bases.transpose().reshape(-1, kernel_size, kernel_size).astype(np.float32)[:num_bases, ...]
 
-        pad = len_list - (i + 1)
+        pad = adaptive_kernel_max_size // 2 - (i + 1)
         bases = torch.Tensor(normed_bases)
-        bases = F.pad(bases, (pad, pad, pad, pad, 0, 0)).view(num_bases, ks * ks)
+        # print(i, kernel_size, bases.shape, normed_bases.shape, pad, num_bases, adaptive_kernel_max_size)
+        bases = F.pad(bases, (pad, pad, pad, pad, 0, 0)).view(num_bases, adaptive_kernel_max_size * adaptive_kernel_max_size)
         b_list.append(bases)
     return torch.cat(b_list, 0)
 
@@ -54,16 +55,17 @@ class Conv_DCFD(nn.Module):
     __constants__ = ['kernel_size', 'stride', 'padding', 'num_bases',
                      'bases_grad', 'mode']
 
-    def __init__(self, in_channels, out_channels, kernel_size, inter_kernel_size=3, stride=1, padding=0,
+    def __init__(self, in_channels, out_channels, adaptive_kernel_max_size=3, adaptive_kernel_min_size=3, inter_kernel_size=3, stride=1, padding=0,
                  num_bases=6, bias=True, bases_grad=True, dilation=1, groups=1,
                  mode='mode1', bases_drop=None):
         super(Conv_DCFD, self).__init__()
+        self.adaptive_kernel_max_size = adaptive_kernel_max_size
         self.in_channels = in_channels
         self.inter_kernel_size = inter_kernel_size
         self.out_channels = out_channels
-        self.kernel_size = kernel_size
+        self.kernel_size = adaptive_kernel_max_size
         self.stride = stride
-        self.padding = padding
+        self.padding = adaptive_kernel_max_size // 2
         self.num_bases = num_bases
         assert mode in ['mode0', 'mode1'], 'Only mode0 and mode1 are available at this moment.'
         self.mode = mode
@@ -72,7 +74,7 @@ class Conv_DCFD(nn.Module):
         self.bases_drop = bases_drop
         self.groups = groups
 
-        bases = bases_list(kernel_size, num_bases)
+        bases = bases_list(adaptive_kernel_min_size, adaptive_kernel_max_size, num_bases)
         self.register_buffer('bases', torch.Tensor(bases).float())
         self.tem_size = len(bases)
 
@@ -118,7 +120,8 @@ class Conv_DCFD(nn.Module):
         bases = torch.einsum('bmkhw, kl->bmlhw', bases, self.bases)
         # self.bases_save = bases.cpu().data.numpy()
 
-        x = F.unfold(F.dropout2d(input, p=drop_rate, training=self.training), kernel_size=self.kernel_size, stride=self.stride, padding=self.padding)
+        x = F.unfold(F.dropout2d(input, p=drop_rate, training=self.training),
+                     kernel_size=self.adaptive_kernel_max_size, stride=self.stride, padding=self.padding)
         x = x.view(N, C, self.kernel_size * self.kernel_size, H // self.stride, W // self.stride)
         bases_out = torch.einsum('bmlhw, bclhw-> bcmhw', bases.view(N, self.num_bases, -1, H // self.stride, W // self.stride),
                                  x).reshape(N, self.in_channels * self.num_bases, H // self.stride, W // self.stride)

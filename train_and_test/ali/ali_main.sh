@@ -5,6 +5,25 @@ for f in $(ls ali_configs_new/isic2018);do
 		echo python3 ali_runner.py ./ali_configs_new/isic2018/$f
 	fi
 done
+#python3 ali_runner.py ./ali_configs_new/isic2018/unet_5.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/unet_7.yaml
+
+python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_3-9.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/unet_3.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/unet_11.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/unet_13.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/unet_15.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_5-5.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_7-7.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_3-3.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-3.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-9.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_5-5.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_7-7.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_9-9.yaml
+
+# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_9-9.yaml
+
 python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
 python3 ali_runner.py ./ali_configs_new/isic2018/multiresunet.yaml
 python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml

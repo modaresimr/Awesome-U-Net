@@ -156,6 +156,7 @@ def execute(config):
     vl_dataloader = DataLoader(vl_dataset, worker_init_fn=seed_worker, generator=g, **config['data_loader']['validation'])
 
     # prepare test dataloader
+    te_dataloader_for_train_log = DataLoader(te_dataset, worker_init_fn=seed_worker, generator=g, **config['data_loader']['test'])
     te_dataloader = DataLoader(te_dataset, worker_init_fn=seed_worker, generator=g, **config['data_loader']['test'])
 
     # -------------- test -----------------
@@ -365,7 +366,7 @@ def execute(config):
 
             # validate model
             vl_metrics, vl_loss = validate(model, criterion, vl_dataloader, valid_metrics, typ='val', epoch=epoch)
-            te_metrics, te_loss = validate(model, criterion, te_dataloader, test_metrics, typ='test in train', epoch=epoch)
+            te_metrics, te_loss = validate(model, criterion, te_dataloader_for_train_log, test_metrics, typ='test in train', epoch=epoch)
             epoch_info = {
                 'tr_loss': tr_loss,
                 'vl_loss': vl_loss,
