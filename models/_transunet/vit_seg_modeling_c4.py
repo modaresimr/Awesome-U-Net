@@ -123,10 +123,15 @@ class Embeddings(nn.Module):
     """Construct the embeddings from patch, position embeddings.
     """
 
-    def __init__(self, config, img_size, in_channels=4):
+    def __init__(self, config=None, img_size=224, in_channels=4,num_classes=2):
         super(Embeddings, self).__init__()
         self.hybrid = None
-        self.config = config
+        # self.config = config
+        config = CONFIGS["R50-ViT-B_16"]
+        config.n_classes = num_classes
+        config.n_skip = 3
+        if "R50-ViT-B_16".find('R50') != -1:
+            config.patches.grid = (int(img_size / 16), int(img_size / 16))
         img_size = _pair(img_size)
 
         if config.patches.get("grid") is not None:   # ResNet
@@ -387,6 +392,7 @@ class VisionTransformer(nn.Module):
             kernel_size=3,
         )
         self.config = config
+        self.load_from(weights=np.load(config.pretrained_path))
 
     def forward(self, x):
         if x.size()[1] == 1:

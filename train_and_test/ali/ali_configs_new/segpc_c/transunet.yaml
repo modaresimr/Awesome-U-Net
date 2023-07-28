@@ -8,6 +8,13 @@ training:
       lr: 0.0001
       momentum: 0.9
       weight_decay: 0.0001
+  criterion:
+    name: "DiceLoss"
+    params: {}
+  scheduler:
+    factor: 0.5
+    patience: 10
+  epochs: 100  
 model:
   load_weights: false
   name: 'VisionTransformer'

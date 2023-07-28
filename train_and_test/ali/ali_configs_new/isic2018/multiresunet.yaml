@@ -3,6 +3,13 @@ training:
     name: 'Adam'
     params:
       lr: 0.0005
+  criterion:
+    name: "DiceLoss"
+    params: {}
+  scheduler:
+    factor: 0.5
+    patience: 10
+  epochs: 100      
 model:
   load_weights: false
   name: 'MultiResUnet'
