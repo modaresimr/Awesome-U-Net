@@ -29,10 +29,11 @@ def _make_nConv(in_channels, out_channels, nb_Conv, activation='ReLU'):
 class ConvBatchNorm(nn.Module):
     """(convolution => [BN] => ReLU)"""
 
-    def __init__(self, in_channels, out_channels, activation='ReLU'):
+    def __init__(self, in_channels, out_channels, activation='ReLU',kernel_size=3):
         super(ConvBatchNorm, self).__init__()
+        
         self.conv = nn.Conv2d(in_channels, out_channels,
-                              kernel_size=3, padding=1)
+                              kernel_size=kernel_size, padding=kernel_size//2)
         self.norm = nn.BatchNorm2d(out_channels)
         self.activation = get_activation(activation)
 
@@ -103,14 +104,14 @@ class UpBlock_attention(nn.Module):
 
 
 class UCTransNet(nn.Module):
-    def __init__(self, config=uct_config.get_CTranS_config(), n_channels=3, n_classes=1, img_size=224, vis=False):
+    def __init__(self, config=uct_config.get_CTranS_config(), n_channels=3, n_classes=1, img_size=224, vis=False,first_kernel_size=3):
         super().__init__()
 
         self.vis = vis
         self.n_channels = n_channels
         self.n_classes = n_classes
         in_channels = config.base_channel
-        self.inc = ConvBatchNorm(n_channels, in_channels)
+        self.inc = ConvBatchNorm(n_channels, in_channels,kernel_size=first_kernel_size)
         self.down1 = DownBlock(in_channels, in_channels*2, nb_Conv=2)
         self.down2 = DownBlock(in_channels*2, in_channels*4, nb_Conv=2)
         self.down3 = DownBlock(in_channels*4, in_channels*8, nb_Conv=2)

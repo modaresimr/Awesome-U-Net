@@ -104,14 +104,15 @@ class UpBlock_attention(nn.Module):
 
 
 class UCTransNet_ACDA(nn.Module):
-    def __init__(self, config=uct_config.get_CTranS_config(), n_channels=3, n_classes=1, img_size=224, vis=False, num_bases=6, DCFD_kernel_size=3):
+    def __init__(self, config=uct_config.get_CTranS_config(), n_channels=3, n_classes=1, img_size=224, vis=False, num_bases=6, adaptive_kernel_max_size=3,adaptive_kernel_min_size=3,inter_kernel_size=3):
         super().__init__()
         self.vis = vis
         self.n_channels = n_channels
         self.n_classes = n_classes
         in_channels = config.base_channel
-        self.DCFD = Conv_DCFD(n_channels, n_channels, kernel_size=DCFD_kernel_size, inter_kernel_size=DCFD_kernel_size,
-                              padding=DCFD_kernel_size // 2, stride=1, bias=True, num_bases=num_bases)
+        self.DCFD = Conv_DCFD(n_channels, n_channels, adaptive_kernel_max_size=adaptive_kernel_max_size,
+                                        adaptive_kernel_min_size=adaptive_kernel_min_size, inter_kernel_size=inter_kernel_size,
+                              padding=inter_kernel_size // 2, stride=1, bias=True, num_bases=num_bases)
         self.inc = ConvBatchNorm(n_channels, in_channels)
         self.down1 = DownBlock(in_channels, in_channels * 2, nb_Conv=2)
         self.down2 = DownBlock(in_channels * 2, in_channels * 4, nb_Conv=2)

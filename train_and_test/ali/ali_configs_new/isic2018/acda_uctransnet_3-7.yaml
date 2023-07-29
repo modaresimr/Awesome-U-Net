@@ -1,0 +1,13 @@
+model:
+  load_weights: false
+  name: 'UCTransNet'
+  params:
+    n_channels: 3
+    n_classes: 2
+    adaptive_kernel_min_size: 3
+    adaptive_kernel_max_size: 7
+  class: 'models._uctransnet.UCTransNet_ACDA.UCTransNet_ACDA'
+# preprocess:
+
+run:
+  key: "dks:7"

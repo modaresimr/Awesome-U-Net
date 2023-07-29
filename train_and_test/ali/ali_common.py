@@ -357,8 +357,8 @@ def execute(config):
                 tr_losses.append(loss.item())
 
                 # write details for each training batch
-                _cml = f"curr_mean-loss:{np.sum(tr_losses)/cnt:0.5f}"
-                _bl = f"mean_batch-loss:{tr_losses[-1]/imgs.shape[0]:0.5f}"
+                _cml = f"curr_ml:{np.sum(tr_losses)/cnt:0.5f}"
+                _bl = f"mbatch_l:{tr_losses[-1]/imgs.shape[0]:0.5f}"
                 tr_iterator.set_description(f"Training) ep:{epoch:03d}, batch:{batch+1:04d} -> {_cml}, {_bl}")
 
             # experiment.log_confusion_matrix(np.concatenate(allmsks) > 0, np.concatenate(allpreds) > 0, epoch=epoch, title='train')
@@ -366,23 +366,23 @@ def execute(config):
 
             # validate model
             vl_metrics, vl_loss = validate(model, criterion, vl_dataloader, valid_metrics, typ='val', epoch=epoch)
-            te_metrics, te_loss = validate(model, criterion, te_dataloader_for_train_log, test_metrics, typ='test in train', epoch=epoch)
+            # te_metrics, te_loss = validate(model, criterion, te_dataloader_for_train_log, test_metrics, typ='test in train', epoch=epoch)
             epoch_info = {
                 'tr_loss': tr_loss,
                 'vl_loss': vl_loss,
-                'te_loss': te_loss,
+                # 'te_loss': te_loss,
                 'tr_metrics': make_serializeable_metrics(evaluator.compute()),
                 'vl_metrics': make_serializeable_metrics(vl_metrics.compute()),
-                'te_metrics': make_serializeable_metrics(te_metrics.compute())
+                # 'te_metrics': make_serializeable_metrics(te_metrics.compute())
             }
             if vl_loss < best_vl_loss:
                 # find a better model
                 best_model = model
-                best_vl_loss = vl_loss
+                best_vl_loss = vl_loss  
                 best_result = epoch_info
-
-            print(
-                f"trl={tr_loss:0.5f} vll={vl_loss:0.5f}   best_te: loss={best_result['te_loss']:0.5f} acc:{best_result['te_metrics']['test_metrics/Accuracy']:0.5f} tpr:{best_result['te_metrics']['test_metrics/Recall']:0.5f} prc:{best_result['te_metrics']['test_metrics/Precision']:0.5f} f1:{best_result['te_metrics']['test_metrics/F1Score']:0.5f}")
+            print(f"                                                                                             -> trl={tr_loss:0.5f} vll={vl_loss:0.5f} best_vll={best_vl_loss:0.5f}")
+            # print(
+                # f"trl={tr_loss:0.5f} vll={vl_loss:0.5f}   best_te: loss={best_result['te_loss']:0.5f} acc:{best_result['te_metrics']['test_metrics/Accuracy']:0.5f} tpr:{best_result['te_metrics']['test_metrics/Recall']:0.5f} prc:{best_result['te_metrics']['test_metrics/Precision']:0.5f} f1:{best_result['te_metrics']['test_metrics/F1Score']:0.5f}")
             # write the final results
 
             experiment.log_metric('_loss', epoch_info['tr_loss'], epoch=epoch)
@@ -405,12 +405,12 @@ def execute(config):
                 experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k): v for k, v in epoch_info['vl_metrics'].items()}, epoch=epoch)
                 # experiment.log_confusion_matrix
 
-            with experiment.test():
-                experiment.log_metric("_loss", epoch_info['te_loss'], epoch=epoch)
-                # experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
-                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
-                # experiment.log_metric("best_loss",epoch_info['te_loss'], epoch=epoch)
-                experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_"))                                       : v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
+            # with experiment.test():
+            #     experiment.log_metric("_loss", epoch_info['te_loss'], epoch=epoch)
+            #     # experiment.log_metrics({k.replace("valid_", "").replace("metrics/", ""): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
+            #     experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k): v for k, v in epoch_info['te_metrics'].items()}, epoch=epoch)
+            #     # experiment.log_metric("best_loss",epoch_info['te_loss'], epoch=epoch)
+            #     experiment.log_metrics({re.sub(r'(valid_|test_|metrics/)', '', k.replace("test_", "best_"))                                       : v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
                 # experiment.log_metrics({k.replace("valid_", "best_").replace("metrics/", ""): v for k, v in best_result['te_metrics'].items()}, epoch=epoch)
 
             epochs_info.append(epoch_info)

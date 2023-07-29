@@ -12,6 +12,8 @@ if 1:
 
 #!/usr/bin/env python3
 
+from datetime import datetime
+
 
 def ali_runner(CONFIG_FILE_PATH):
     parent = os.path.dirname(CONFIG_FILE_PATH)
@@ -19,12 +21,13 @@ def ali_runner(CONFIG_FILE_PATH):
     config = {**config, **load_config(parent + "/_common.yaml")}
     config = {**config, **load_config(CONFIG_FILE_PATH)}
     config['config'] = {'name': parent.split("/")[-1] + "_" + CONFIG_FILE_PATH.split("/")[-1].split(".")[0]}
-    config['model']['save_dir'] = '../../saved_models/' + config['config']['name']
+    config['model']['save_dir'] = '../../saved_models/' + config['config']['name'] + "_" + datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
     try:
         os.removedirs(config['model']['save_dir'])
     except:
         pass
-    config['training']['epochs'] = 100
+
+    config['training']['epochs'] = 50 if 'uctransnet' in CONFIG_FILE_PATH else 100
 
     import ali_common
     ali_common.execute(config)
