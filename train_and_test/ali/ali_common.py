@@ -268,6 +268,10 @@ def execute(config):
 
                 msks_ = torch.argmax(msks, 1, keepdim=False)
                 # print(msks_.max(), msks_.shape, preds_.max(), 'ddddddddd')
+                if config['dataset']['class_name'] == "SegPC2021Dataset":
+                    not_nucs = torch.where(imgs[:, -1, :, :] > 0, 0, 1)
+                    preds_ = preds_ * not_nucs
+                    msks_ = (torch.tensor(msks_) * not_nucs).int()
                 evaluator.update(preds_, msks_)
                 # allmsks.append(msks_.cpu().numpy())
                 # allpreds.append(preds_.cpu().numpy())
@@ -345,7 +349,7 @@ def execute(config):
 
                 if config['dataset']['class_name'] == "SegPC2021Dataset":
                     not_nucs = torch.where(imgs[:, -1, :, :] > 0, 0, 1)
-                    preds_ = ((torch.tensor(preds_) > 0.5) * not_nucs).int()
+                    preds_ = preds_ * not_nucs
                     msks_ = (torch.tensor(msks_) * not_nucs).int()
 
                 # print(preds_.shape, msks_.shape, 'dddddddddd')
@@ -378,11 +382,12 @@ def execute(config):
             if vl_loss < best_vl_loss:
                 # find a better model
                 best_model = model
-                best_vl_loss = vl_loss  
+                best_vl_loss = vl_loss
                 best_result = epoch_info
-            print(f"                                                                                             -> trl={tr_loss:0.5f} vll={vl_loss:0.5f} best_vll={best_vl_loss:0.5f}")
+            print(
+                f"                                                                                             -> trl={tr_loss:0.5f} vll={vl_loss:0.5f} best_vll={best_vl_loss:0.5f}")
             # print(
-                # f"trl={tr_loss:0.5f} vll={vl_loss:0.5f}   best_te: loss={best_result['te_loss']:0.5f} acc:{best_result['te_metrics']['test_metrics/Accuracy']:0.5f} tpr:{best_result['te_metrics']['test_metrics/Recall']:0.5f} prc:{best_result['te_metrics']['test_metrics/Precision']:0.5f} f1:{best_result['te_metrics']['test_metrics/F1Score']:0.5f}")
+            # f"trl={tr_loss:0.5f} vll={vl_loss:0.5f}   best_te: loss={best_result['te_loss']:0.5f} acc:{best_result['te_metrics']['test_metrics/Accuracy']:0.5f} tpr:{best_result['te_metrics']['test_metrics/Recall']:0.5f} prc:{best_result['te_metrics']['test_metrics/Precision']:0.5f} f1:{best_result['te_metrics']['test_metrics/F1Score']:0.5f}")
             # write the final results
 
             experiment.log_metric('_loss', epoch_info['tr_loss'], epoch=epoch)
@@ -468,7 +473,10 @@ def execute(config):
                 if te_dataset.number_classes <= 2:
                     preds_ = preds_.float()
                 msks_ = torch.argmax(msks, 1, keepdim=False)
-
+                if config['dataset']['class_name'] == "SegPC2021Dataset":
+                    not_nucs = torch.where(imgs[:, -1, :, :] > 0, 0, 1)
+                    preds_ = preds_ * not_nucs
+                    msks_ = (torch.tensor(msks_) * not_nucs).int()
                 evaluator.update(preds_, msks_)
                 # allmsks.append(msks_.cpu().numpy())
                 # allpreds.append(preds_.cpu().numpy())
@@ -499,6 +507,7 @@ def execute(config):
     # config_vit = uct_config.get_CTranS_config()
 
     # Initialize and train your model
+    print('model_class', model_class)
     model = model_class(**config['model']['params'])
     # train(model)
 
