@@ -57,8 +57,9 @@ class Conv_DCFD(nn.Module):
 
     def __init__(self, in_channels, out_channels, adaptive_kernel_max_size=3, adaptive_kernel_min_size=3, inter_kernel_size=3, stride=1, padding=0,
                  num_bases=6, bias=True, bases_grad=True, dilation=1, groups=1,
-                 mode='mode1', bases_drop=None):
+                 mode='mode1', bases_drop=None, drop_rate=0.0):
         super(Conv_DCFD, self).__init__()
+        self.drop_rate = drop_rate
         self.adaptive_kernel_max_size = adaptive_kernel_max_size
         self.in_channels = in_channels
         self.inter_kernel_size = inter_kernel_size
@@ -112,7 +113,7 @@ class Conv_DCFD(nn.Module):
 
         M = self.num_bases
 
-        drop_rate = 0.0
+        drop_rate = self.drop_rate
         bases = self.bases_net(F.dropout2d(input, p=drop_rate, training=self.training)).view(
             N, self.num_bases, self.tem_size, H // self.stride, W // self.stride)  # BxMxMxHxW
 

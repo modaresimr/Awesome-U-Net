@@ -1,4 +1,5 @@
 import sys
+import yaml
 sys.path.append('../..')
 from utils import (
     show_sbs,
@@ -11,9 +12,6 @@ def class_by_name(clazz):
     module_name, class_name = clazz.rsplit('.', 1)
     module = __import__(module_name, fromlist=[class_name])
     return getattr(module, class_name)
-
-
-import yaml
 
 
 def save_config(config, config_filepath):

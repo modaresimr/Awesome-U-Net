@@ -6,227 +6,246 @@ for f in $(ls ali_configs_new/isic2018);do
 	fi
 done
 
-python3 ali_runner.py ./ali_configs_new/segpc_c/attunet.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/unetpp.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/unet_5.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/missformer.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/multiresunet.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/resunet.yaml
 
-python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_unet_3-9.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_unet_3-9.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
 python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
+
+python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
+
 python3 ali_runner.py ./ali_configs_new/isic2018/multiresunet.yaml
 python3 ali_runner.py ./ali_configs_new/isic2018/resunet.yaml
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/unet_3.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/unet_5.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/unet_7.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/resunet.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
+python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_3-9.yaml
 python3 ali_runner.py ./ali_configs_new/isic2018/unet_9.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/unetpp.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/unetpp.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/unet_3.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/unet_5.yaml
-python3 ali_runner.py ./ali_configs_new/isic2018/unet_7.yaml
 python3 ali_runner.py ./ali_configs_new/isic2018/unet_9.yaml
 
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-9.yaml
 
 
-
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-11.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-7.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_3-3.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_5-5.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_7-7.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_9-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-11.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-5.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-7.yaml
-
+# python3 ali_runner.py ./ali_configs_new/segpc_c/attunet.yaml
+# python3 ali_runner.py ./ali_configs_new/segpc_c/unetpp.yaml
+# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_5.yaml
 # python3 ali_runner.py ./ali_configs_new/segpc_c/missformer.yaml
 # python3 ali_runner.py ./ali_configs_new/segpc_c/multiresunet.yaml
 # python3 ali_runner.py ./ali_configs_new/segpc_c/resunet.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/transunet.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/unet_11.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/unet_13.yaml
-python3 ali_runner.py ./ali_configs_new/segpc_c/unet_15.yaml
 
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-9.yaml
-
-
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-11.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-7.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-3.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_5-5.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_7-7.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_9-9.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-11.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-5.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-7.yaml
+# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_unet_3-9.yaml
+# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_unet_3-9.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
 # python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
 # python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
 # python3 ali_runner.py ./ali_configs_new/isic2018/multiresunet.yaml
 # python3 ali_runner.py ./ali_configs_new/isic2018/resunet.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/unet_11.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/unet_13.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/unet_15.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/unetpp.yaml
 
-# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_unet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_3.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_5.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_7.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_unet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_3.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_5.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_7.yaml
-
-
-# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_5.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_3.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_7.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_5.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_3.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_7.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_5.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_3.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_7.yaml
-# python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_9.yaml
-
-#python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_5.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_7.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_5.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_7.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_5.yaml
-
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_7.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
-
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_11.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_5.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_9.yaml
-#python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-7.yaml
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-11.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-11.yaml
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-5.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-7.yaml
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-7.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-9.yaml
-
-
-
-
-#python3 ali_runner.py ./ali_configs_new/isic2018/unet_5.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/unet_7.yaml
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
 # python3 ali_runner.py ./ali_configs_new/isic2018/unet_3.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/unet_11.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/unet_13.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/unet_15.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_5-5.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_7-7.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_3-3.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-3.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-9.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_5-5.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_7-7.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_9-9.yaml
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_9-9.yaml
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/multiresunet.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
-
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/unet.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_7.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_7.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet.yaml
-
-# python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
-# python3 ali_runner.py ./ali_configs_new/isic2018/resunet.yaml
-
+# python3 ali_runner.py ./ali_configs_new/isic2018/unet_5.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/unet_7.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/unet_9.yaml
 # python3 ali_runner.py ./ali_configs_new/isic2018/unetpp.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/unetpp.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/unet_3.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/unet_5.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/unet_7.yaml
+# python3 ali_runner.py ./ali_configs_new/isic2018/unet_9.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-9.yaml
 
 
-# for f in $(ls ali_configs_new/isic2018');do
-# 	python3 ali_runner.py ./ali_configs/isic2018/$f
-# done
 
-# # for ((i=3; i<=13; i+=2))
-# # do
-# #     #python3 ali_runner.py ./ali_configs/segpc/segpc2021_uctransnet_$i.yaml
-# #     python3 ali_runner.py ./ali_configs/isic2018/isic2018_uctransnet_$i.yaml
-# #     # exit 1
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-11.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-7.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_uctransnet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_3-3.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_5-5.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_7-7.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/acda_unet_9-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-11.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-5.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-7.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/missformer.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/multiresunet.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/resunet.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/transunet.yaml
+# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_11.yaml
+# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_13.yaml
+# python3 ali_runner.py ./ali_configs_new/segpc_c/unet_15.yaml
+
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-9.yaml
+
+
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-11.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-7.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-3.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_5-5.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_7-7.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_9-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-11.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-5.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-7.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/multiresunet.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/resunet.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet_11.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet_13.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet_15.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unetpp.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_unet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/unet_3.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/unet_9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/unet_5.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/unet_7.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_unet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/unet_3.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/unet_9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/unet_5.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/unet_7.yaml
+
+
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_5.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_3.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_7.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_5.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_3.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_7.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/adapt_uctransnet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_5.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_3.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_7.yaml
+# # python3 ali_runner.py ./ali_configs_new/segpc_c/uctransnet_9.yaml
+
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_5.yaml
+# #
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_7.yaml
+# #python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_5.yaml
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_7.yaml
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_5.yaml
+
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_7.yaml
+# #python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
+
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_11.yaml
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_5.yaml
+# #python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet_9.yaml
+# #python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-7.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-11.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-11.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-5.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_3-7.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-7.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_3-9.yaml
+
+
+
+
+# #python3 ali_runner.py ./ali_configs_new/isic2018/unet_5.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet_7.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet_3.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet_11.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet_13.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet_15.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_5-5.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_7-7.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_3-3.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-3.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_3-9.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_5-5.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_7-7.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_unet_9-9.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_unet_9-9.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/missformer.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/multiresunet.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/transunet.yaml
+
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unet.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/acda_uctransnet_7.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/adapt_uctransnet_7.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/uctransnet.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/attunet.yaml
+# # python3 ali_runner.py ./ali_configs_new/isic2018/resunet.yaml
+
+# # python3 ali_runner.py ./ali_configs_new/isic2018/unetpp.yaml
+
+
+# # for f in $(ls ali_configs_new/isic2018');do
+# # 	python3 ali_runner.py ./ali_configs/isic2018/$f
 # # done
 
+# # # for ((i=3; i<=13; i+=2))
+# # # do
+# # #     #python3 ali_runner.py ./ali_configs/segpc/segpc2021_uctransnet_$i.yaml
+# # #     python3 ali_runner.py ./ali_configs/isic2018/isic2018_uctransnet_$i.yaml
+# # #     # exit 1
+# # # done
 
+
+# # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_unet.yaml
+# # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_unetpp.yaml
+# # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_uctransnet.yaml
+
+
+# # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_transunet.yaml
+# # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_resunet.yaml
+# # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_multiresunet.yaml
+# # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_missformer.yaml
+# # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_attunet.yaml
+
+
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_adaptuctransnet_7.yaml
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_unet.yaml
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_uctransnet.yaml
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_attunet.yaml
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_resunet.yaml
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_unetpp.yaml
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_missformer.yaml
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_transunet.yaml
+# # python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_multiresunet.yaml
+
+
+
+
+
+
+
+# # python3 ali_runner.py ali_configs/segpc/segpc2021_adaptuctransnet_7.yaml
 # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_unet.yaml
-# # python3 ali_runner.py ./ali_configs/segpc/segpc2021_unetpp.yaml
 # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_uctransnet.yaml
-
-
+# # python3 ali_runner.py ./ali_configs/segpc/segpc2021_unetpp.yaml
 # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_transunet.yaml
 # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_resunet.yaml
 # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_multiresunet.yaml
 # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_missformer.yaml
 # # python3 ali_runner.py ./ali_configs/segpc/segpc2021_attunet.yaml
-
-
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_adaptuctransnet_7.yaml
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_unet.yaml
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_uctransnet.yaml
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_attunet.yaml
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_resunet.yaml
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_unetpp.yaml
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_missformer.yaml
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_transunet.yaml
-# python3 ali_runner.py ali_configs/segpc_2class/segpc2021_2c_multiresunet.yaml
-
-
-
-
-
-
-
-# python3 ali_runner.py ali_configs/segpc/segpc2021_adaptuctransnet_7.yaml
-# python3 ali_runner.py ./ali_configs/segpc/segpc2021_unet.yaml
-# python3 ali_runner.py ./ali_configs/segpc/segpc2021_uctransnet.yaml
-# python3 ali_runner.py ./ali_configs/segpc/segpc2021_unetpp.yaml
-# python3 ali_runner.py ./ali_configs/segpc/segpc2021_transunet.yaml
-# python3 ali_runner.py ./ali_configs/segpc/segpc2021_resunet.yaml
-# python3 ali_runner.py ./ali_configs/segpc/segpc2021_multiresunet.yaml
-# python3 ali_runner.py ./ali_configs/segpc/segpc2021_missformer.yaml
-# python3 ali_runner.py ./ali_configs/segpc/segpc2021_attunet.yaml
 
 
 

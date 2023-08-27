@@ -54,6 +54,8 @@ class SegPC2021Dataset(Dataset):
         print(f'loading Y_{self.mode}...')
         self.Y = np.load(f'{ADD}/cyts_{self.mode}_{self.input_size}x{self.input_size}_s{self.scale}_Y.npy')
         print(f'finished.cyts_{self.mode}_{self.input_size}x{self.input_size}_s{self.scale}_Y.npy')
+        if (self.mode == 'te'):
+            self.origY = np.load(f'{ADD}/cyts_{self.mode}_{self.input_size}x{self.input_size}_s{self.scale}_origY.npy')
 
     def __len__(self):
         return len(self.X)
@@ -89,4 +91,6 @@ class SegPC2021Dataset(Dataset):
             # msk[1, :, :] += msk[2, :, :]
 
         sample = {'image': img, 'mask': msk, 'id': idx}
+        if self.mode == 'te':
+            sample['orig_mask'] = self.origY[idx]
         return sample

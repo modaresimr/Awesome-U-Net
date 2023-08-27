@@ -1,0 +1,11 @@
+model:
+  load_weights: false
+  name: 'UNet'
+  params:
+    in_channels: 4
+    out_channels: 2
+    with_bn: false
+    first_kernel_size: 5
+    
+  class: 'models.unet.UNet'  
+# preprocess:

@@ -45,7 +45,7 @@ def execute(config):
         workspace="modaresimr",
         log_code=True,
         log_graph=True,
-        # disabled=True,
+        disabled=True,
         auto_param_logging=True,  # Can be True or False
         auto_histogram_tensorboard_logging=True,  # Can be True or False
         auto_metric_logging=True  # Can be True or False

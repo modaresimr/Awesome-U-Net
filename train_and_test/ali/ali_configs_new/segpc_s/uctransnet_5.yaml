@@ -1,0 +1,9 @@
+model:
+  load_weights: false
+  name: 'UCTransNet'
+  params:
+    n_channels: 4
+    n_classes: 2
+    first_kernel_size: 5
+  class: 'models._uctransnet.UCTransNet.UCTransNet'
+# preprocess:

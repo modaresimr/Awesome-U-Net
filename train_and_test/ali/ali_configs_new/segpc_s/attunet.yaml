@@ -1,0 +1,8 @@
+model:
+  load_weights: false
+  name: 'AttU_Net'
+  params:
+    img_ch: 4
+    output_ch: 2
+  class: 'models.attunet.AttU_Net'  
+# preprocess:

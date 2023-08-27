@@ -1,0 +1,12 @@
+model:
+  load_weights: false
+  name: 'AdaptUCTransNetN'
+  params:
+    n_channels: 4
+    n_classes: 2
+    adaptive_kernel_min_size: 3
+    adaptive_kernel_max_size: 9
+  class: 'models._adaptuctransnet.AdaptUCTransNetN.AdaptUCTransNet'
+
+run:
+  key: "dks:9"
