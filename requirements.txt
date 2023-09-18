@@ -6,3 +6,8 @@ ml_collections
 numpy==1.22.0
 torch
 tensorflow
+scipy
+matplotlib
+torchvision
+pandas
+scikit-image
